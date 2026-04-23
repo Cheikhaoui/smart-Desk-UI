@@ -1,0 +1,98 @@
+<app-create-ticket-dialog [(visible)]="createDialogVisible" (created)="onTicketCreated()" />
+
+<div class="mx-auto max-w-7xl space-y-6 p-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold">Dashboard</h1>
+      <p class="text-surface-500 dark:text-surface-400 text-sm">Overview of your tickets</p>
+    </div>
+    <p-button label="New Ticket" icon="pi pi-plus" (onClick)="openCreate()" />
+  </div>
+
+  @if (error(); as err) {
+    <div
+      class="flex items-center justify-between rounded-md bg-red-50 px-4 py-3 text-red-900 dark:bg-red-950/30 dark:text-red-100"
+    >
+      <div class="flex items-center gap-2">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ err }}</span>
+      </div>
+      <p-button
+        label="Retry"
+        icon="pi pi-refresh"
+        severity="danger"
+        [text]="true"
+        size="small"
+        (onClick)="retry()"
+      />
+    </div>
+  }
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    @if (stats(); as s) {
+      <div
+        class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-md border p-4"
+      >
+        <p class="text-surface-500 dark:text-surface-400 text-sm">Open</p>
+        <p class="mt-1 text-3xl font-bold">{{ s.open }}</p>
+      </div>
+      <div
+        class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-md border p-4"
+      >
+        <p class="text-surface-500 dark:text-surface-400 text-sm">In Progress</p>
+        <p class="mt-1 text-3xl font-bold">{{ s.inProgress }}</p>
+      </div>
+      <div
+        class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-md border p-4"
+      >
+        <p class="text-surface-500 dark:text-surface-400 text-sm">Resolved</p>
+        <p class="mt-1 text-3xl font-bold">{{ s.resolved }}</p>
+      </div>
+      <div
+        class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-md border p-4"
+      >
+        <p class="text-surface-500 dark:text-surface-400 text-sm">Closed</p>
+        <p class="mt-1 text-3xl font-bold">{{ s.closed }}</p>
+      </div>
+    } @else if (loading()) {
+      <p-skeleton height="6rem" />
+      <p-skeleton height="6rem" />
+      <p-skeleton height="6rem" />
+      <p-skeleton height="6rem" />
+    }
+  </div>
+
+  <div
+    class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-md border"
+  >
+    <div class="border-surface-200 dark:border-surface-700 border-b px-4 py-3">
+      <h2 class="font-semibold">Recent Tickets</h2>
+    </div>
+
+    @if (loading() && recent().length === 0) {
+      <div class="space-y-2 p-4">
+        <p-skeleton height="2rem" />
+        <p-skeleton height="2rem" />
+        <p-skeleton height="2rem" />
+      </div>
+    } @else if (empty()) {
+      <div class="text-surface-500 dark:text-surface-400 py-12 text-center">
+        <i class="pi pi-inbox mb-2 block text-4xl"></i>
+        <p>No tickets yet. Create your first one to get started.</p>
+      </div>
+    } @else {
+      <ul class="divide-surface-200 dark:divide-surface-700 divide-y">
+        @for (t of recent(); track t.id) {
+          <li class="flex items-center gap-3 px-4 py-3">
+            <app-ticket-status-badge [status]="t.status!" />
+            <app-ticket-priority-badge [priority]="t.priority!" />
+            <span class="flex-1 truncate font-medium">{{ t.title }}</span>
+            <span class="text-surface-500 dark:text-surface-400 text-sm">
+              {{ t.createdAt | date: 'short' }}
+            </span>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>

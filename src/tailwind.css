@@ -1,0 +1,11 @@
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/preflight' layer(tailwind-base);
+@import 'tailwindcss/utilities' layer(tailwind-utilities);
+
+@import 'primeicons/primeicons.css';
+
+@plugin 'tailwindcss-primeui';
+
+@custom-variant dark (&:where(.app-dark, .app-dark *));

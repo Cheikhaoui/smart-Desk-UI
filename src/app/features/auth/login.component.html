@@ -1,0 +1,73 @@
+<div class="bg-surface-50 dark:bg-surface-950 flex min-h-screen items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <p-card>
+      <ng-template pTemplate="title">
+        <div class="text-center">
+          <h1 class="text-2xl font-semibold">SmartDesk</h1>
+          <p class="text-surface-500 dark:text-surface-400 mt-1 text-sm font-normal">
+            Sign in to continue
+          </p>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+          @if (error(); as err) {
+            <div
+              class="rounded-md bg-red-50 p-3 text-sm text-red-900 dark:bg-red-950/30 dark:text-red-100"
+            >
+              {{ err }}
+            </div>
+          }
+
+          <div>
+            <label for="email" class="mb-1 block text-sm font-medium">Email</label>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              formControlName="email"
+              class="w-full"
+              autocomplete="email"
+              [class.ng-invalid]="!!fieldErrors()['email']"
+              [class.ng-dirty]="!!fieldErrors()['email']"
+            />
+            @if (fieldErrors()['email']; as msg) {
+              <small class="text-red-500">{{ msg }}</small>
+            }
+          </div>
+
+          <div>
+            <label for="password" class="mb-1 block text-sm font-medium">Password</label>
+            <p-password
+              inputId="password"
+              formControlName="password"
+              [feedback]="false"
+              [toggleMask]="true"
+              styleClass="w-full"
+              inputStyleClass="w-full"
+              autocomplete="current-password"
+            />
+            @if (fieldErrors()['password']; as msg) {
+              <small class="text-red-500">{{ msg }}</small>
+            }
+          </div>
+
+          <p-button
+            type="submit"
+            label="Sign In"
+            [loading]="submitting()"
+            [disabled]="form.invalid"
+            styleClass="w-full"
+          />
+
+          <p class="text-surface-500 dark:text-surface-400 text-center text-sm">
+            Don't have an account?
+            <a routerLink="/register" class="text-primary font-medium hover:underline">
+              Create one
+            </a>
+          </p>
+        </form>
+      </ng-template>
+    </p-card>
+  </div>
+</div>

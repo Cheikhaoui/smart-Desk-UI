@@ -1,0 +1,92 @@
+<div
+  class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-md border"
+>
+  <div class="border-surface-200 dark:border-surface-700 border-b px-4 py-3">
+    <h2 class="font-semibold">Comments ({{ comments().length }})</h2>
+  </div>
+
+  <div class="space-y-4 p-4">
+    @if (error(); as err) {
+      <div
+        class="flex items-center justify-between rounded-md bg-red-50 px-4 py-3 text-sm text-red-900 dark:bg-red-950/30 dark:text-red-100"
+      >
+        <span>{{ err }}</span>
+        <p-button
+          label="Retry"
+          icon="pi pi-refresh"
+          severity="danger"
+          [text]="true"
+          size="small"
+          (onClick)="retry()"
+        />
+      </div>
+    }
+
+    @if (loading() && comments().length === 0) {
+      <div class="space-y-2">
+        <p-skeleton height="3rem" />
+        <p-skeleton height="3rem" />
+      </div>
+    } @else if (empty()) {
+      <p class="text-surface-500 dark:text-surface-400 py-4 text-center text-sm">
+        No comments yet. Start the conversation.
+      </p>
+    } @else {
+      <ul class="space-y-3">
+        @for (c of comments(); track c.id) {
+          <li class="flex gap-3">
+            <div
+              class="bg-primary text-primary-contrast flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium"
+            >
+              {{ initial(c.author?.fullName) }}
+            </div>
+            <div class="flex-1 space-y-1">
+              <div class="flex items-baseline gap-2">
+                <span class="text-sm font-medium">{{ c.author?.fullName ?? 'Unknown' }}</span>
+                @if (c.aiGenerated) {
+                  <span
+                    class="rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-800 dark:bg-blue-950/40 dark:text-blue-200"
+                  >
+                    AI
+                  </span>
+                }
+                <span class="text-surface-500 dark:text-surface-400 text-xs">
+                  {{ c.createdAt | date: 'short' }}
+                </span>
+              </div>
+              <p class="text-sm whitespace-pre-wrap">{{ c.content }}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      class="border-surface-200 dark:border-surface-700 space-y-2 border-t pt-4"
+    >
+      <textarea
+        pTextarea
+        formControlName="content"
+        rows="3"
+        placeholder="Write a comment…"
+        class="w-full"
+        [class.ng-invalid]="!!fieldErrors()['content']"
+        [class.ng-dirty]="!!fieldErrors()['content']"
+      ></textarea>
+      @if (fieldErrors()['content']; as msg) {
+        <small class="text-red-500">{{ msg }}</small>
+      }
+      <div class="flex justify-end">
+        <p-button
+          type="submit"
+          label="Post Comment"
+          icon="pi pi-send"
+          [loading]="submitting()"
+          [disabled]="form.invalid"
+        />
+      </div>
+    </form>
+  </div>
+</div>

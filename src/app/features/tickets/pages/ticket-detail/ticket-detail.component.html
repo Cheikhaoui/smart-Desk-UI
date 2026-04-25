@@ -1,0 +1,107 @@
+<app-edit-ticket-dialog [(visible)]="editDialogVisible" [ticket]="ticket()" (saved)="onSaved()" />
+
+<div class="mx-auto max-w-5xl space-y-6 p-6">
+  <div class="flex items-center gap-2">
+    <p-button
+      icon="pi pi-arrow-left"
+      severity="secondary"
+      [text]="true"
+      (onClick)="back()"
+      ariaLabel="Back to tickets"
+    />
+    <span class="text-surface-500 dark:text-surface-400 text-sm">Back to tickets</span>
+  </div>
+
+  @if (error(); as err) {
+    <div
+      class="flex items-center justify-between rounded-md bg-red-50 px-4 py-3 text-red-900 dark:bg-red-950/30 dark:text-red-100"
+    >
+      <div class="flex items-center gap-2">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ err }}</span>
+      </div>
+      <p-button
+        label="Retry"
+        icon="pi pi-refresh"
+        severity="danger"
+        [text]="true"
+        size="small"
+        (onClick)="retry()"
+      />
+    </div>
+  }
+
+  @if (ticket(); as t) {
+    <div class="space-y-4">
+      <div class="flex items-start justify-between gap-4">
+        <div class="space-y-2">
+          <div class="flex flex-wrap items-center gap-2">
+            @if (t.status) {
+              <app-ticket-status-badge [status]="t.status" />
+            }
+            @if (t.priority) {
+              <app-ticket-priority-badge [priority]="t.priority" />
+            }
+          </div>
+          <h1 class="text-2xl font-semibold">{{ t.title }}</h1>
+          <p class="text-surface-500 dark:text-surface-400 text-sm">
+            Opened by {{ t.createdBy?.fullName ?? 'unknown' }} ·
+            {{ t.createdAt | date: 'medium' }}
+          </p>
+        </div>
+        <p-button label="Edit" icon="pi pi-pencil" (onClick)="openEdit()" />
+      </div>
+
+      <div
+        class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 grid grid-cols-1 gap-4 rounded-md border p-4 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        <app-assignee-control [ticket]="t" class="sm:col-span-2 lg:col-span-1" />
+        <div>
+          <p class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase">
+            Category
+          </p>
+          <p class="mt-1 text-sm">{{ t.category || '—' }}</p>
+        </div>
+        <div>
+          <p class="text-surface-500 dark:text-surface-400 text-xs font-medium uppercase">
+            Last updated
+          </p>
+          <p class="mt-1 text-sm">{{ t.updatedAt | date: 'medium' }}</p>
+        </div>
+      </div>
+
+      @if (t.aiSummary) {
+        <div
+          class="rounded-md border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/50 dark:bg-blue-950/20"
+        >
+          <div class="mb-2 flex items-center gap-2">
+            <i class="pi pi-sparkles text-blue-500"></i>
+            <h2 class="text-sm font-semibold text-blue-900 dark:text-blue-100">AI Summary</h2>
+          </div>
+          <p class="text-sm text-blue-900 dark:text-blue-100">{{ t.aiSummary }}</p>
+        </div>
+      }
+
+      <div
+        class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-md border p-4"
+      >
+        <h2 class="mb-2 text-sm font-semibold">Description</h2>
+        @if (t.description) {
+          <p class="text-sm whitespace-pre-wrap">{{ t.description }}</p>
+        } @else {
+          <p class="text-surface-500 dark:text-surface-400 text-sm italic">
+            No description provided.
+          </p>
+        }
+      </div>
+
+      <app-ticket-comments [ticketId]="id()" />
+    </div>
+  } @else if (loading()) {
+    <div class="space-y-4">
+      <p-skeleton height="2rem" width="20rem" />
+      <p-skeleton height="6rem" />
+      <p-skeleton height="8rem" />
+    </div>
+  }
+</div>

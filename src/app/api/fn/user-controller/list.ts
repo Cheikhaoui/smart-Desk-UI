@@ -7,16 +7,26 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CommentResponse } from '../../models/comment-response';
+import { UserSummary } from '../../models/user-summary';
 
 export interface List$Params {
-  ticketId: string;
+
+/**
+ * Filter by role
+ */
+  role?: 'ADMIN' | 'AGENT' | 'USER';
+
+/**
+ * Include disabled accounts when false
+ */
+  active?: boolean;
 }
 
-export function list(http: HttpClient, rootUrl: string, params: List$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentResponse>>> {
+export function list(http: HttpClient, rootUrl: string, params?: List$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserSummary>>> {
   const rb = new RequestBuilder(rootUrl, list.PATH, 'get');
   if (params) {
-    rb.path('ticketId', params.ticketId, {});
+    rb.query('role', params.role, {});
+    rb.query('active', params.active, {});
   }
 
   return http.request(
@@ -24,9 +34,9 @@ export function list(http: HttpClient, rootUrl: string, params: List$Params, con
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<CommentResponse>>;
+      return r as StrictHttpResponse<Array<UserSummary>>;
     })
   );
 }
 
-list.PATH = '/v1/tickets/{ticketId}/comments';
+list.PATH = '/v1/users';

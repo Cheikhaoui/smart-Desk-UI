@@ -7,19 +7,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CommentCreateRequest } from '../../models/comment-create-request';
 import { CommentResponse } from '../../models/comment-response';
 
-export interface Add$Params {
+export interface List1$Params {
   ticketId: string;
-      body: CommentCreateRequest
 }
 
-export function add(http: HttpClient, rootUrl: string, params: Add$Params, context?: HttpContext): Observable<StrictHttpResponse<CommentResponse>> {
-  const rb = new RequestBuilder(rootUrl, add.PATH, 'post');
+export function list1(http: HttpClient, rootUrl: string, params: List1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentResponse>>> {
+  const rb = new RequestBuilder(rootUrl, list1.PATH, 'get');
   if (params) {
     rb.path('ticketId', params.ticketId, {});
-    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -27,9 +24,9 @@ export function add(http: HttpClient, rootUrl: string, params: Add$Params, conte
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<CommentResponse>;
+      return r as StrictHttpResponse<Array<CommentResponse>>;
     })
   );
 }
 
-add.PATH = '/v1/tickets/{ticketId}/comments';
+list1.PATH = '/v1/tickets/{ticketId}/comments';

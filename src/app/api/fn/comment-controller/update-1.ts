@@ -8,11 +8,11 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { CommentResponse } from '../../models/comment-response';
-import { UpdateRequest } from '../../models/update-request';
+import { CommentUpdateRequest } from '../../models/comment-update-request';
 
 export interface Update1$Params {
   commentId: string;
-      body: UpdateRequest
+      body: CommentUpdateRequest
 }
 
 export function update1(http: HttpClient, rootUrl: string, params: Update1$Params, context?: HttpContext): Observable<StrictHttpResponse<CommentResponse>> {
@@ -23,7 +23,7 @@ export function update1(http: HttpClient, rootUrl: string, params: Update1$Param
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {

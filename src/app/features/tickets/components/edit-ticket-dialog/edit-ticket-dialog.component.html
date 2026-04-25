@@ -1,0 +1,18 @@
+<p-dialog
+  [(visible)]="visible"
+  header="Edit Ticket"
+  [modal]="true"
+  [style]="{ width: '32rem' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onCancel()"
+>
+  <app-ticket-form
+    mode="edit"
+    [initialValue]="ticket()"
+    [submitting]="submitting()"
+    [fieldErrors]="fieldErrors()"
+    (submitted)="onSubmit($event)"
+    (cancelled)="onCancel()"
+  />
+</p-dialog>

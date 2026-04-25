@@ -7,7 +7,9 @@ export type { StrictHttpResponse } from './strict-http-response';
 export { Api } from './api';
 
 export type { AssignRequest } from './models/assign-request';
+export type { CommentCreateRequest } from './models/comment-create-request';
 export type { CommentResponse } from './models/comment-response';
+export type { CommentUpdateRequest } from './models/comment-update-request';
 export type { CreateRequest } from './models/create-request';
 export type { ErrorResponse } from './models/error-response';
 export type { LoginRequest } from './models/login-request';
@@ -38,8 +40,8 @@ export type { Update$Params as Update$Params } from './fn/ticket-controller/upda
 export { update as update } from './fn/ticket-controller/update';
 export type { Mine$Params as Mine$Params } from './fn/ticket-controller/mine';
 export { mine as mine } from './fn/ticket-controller/mine';
-export type { List$Params as List$Params } from './fn/comment-controller/list';
-export { list as list } from './fn/comment-controller/list';
+export type { List1$Params as List1$Params } from './fn/comment-controller/list-1';
+export { list1 as list1 } from './fn/comment-controller/list-1';
 export type { Add$Params as Add$Params } from './fn/comment-controller/add';
 export { add as add } from './fn/comment-controller/add';
 export type { Delete1$Params as Delete1$Params } from './fn/comment-controller/delete-1';
@@ -50,3 +52,5 @@ export type { Register$Params as Register$Params } from './fn/auth-controller/re
 export { register as register } from './fn/auth-controller/register';
 export type { Login$Params as Login$Params } from './fn/auth-controller/login';
 export { login as login } from './fn/auth-controller/login';
+export type { List$Params as List$Params } from './fn/user-controller/list';
+export { list as list } from './fn/user-controller/list';

@@ -68,6 +68,7 @@ export class TicketStore {
   readonly agents = signal<UserSummary[]>([]);
   readonly agentsLoading = signal(false);
   readonly assigning = signal(false);
+  readonly deleting = signal(false);
 
   readonly dashboardEmpty = computed(
     () => !this.dashboardLoading() && !this.error() && this.recentTickets().length === 0
@@ -275,6 +276,40 @@ export class TicketStore {
       catchError((err: HttpErrorResponse) => {
         this.assigning.set(false);
         return throwError(() => err);
+      })
+    );
+  }
+
+  deleteTicket(id: string): Observable<void> {
+    this.deleting.set(true);
+    return this.api.remove(id).pipe(
+      tap(() => {
+        this.tickets.update((list) => list.filter((t) => t.id !== id));
+        this.totalElements.update((n) => Math.max(0, n - 1));
+        if (this.currentTicket()?.id === id) {
+          this.currentTicket.set(null);
+        }
+        this.deleting.set(false);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        this.deleting.set(false);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  updateComment(commentId: string, content: string): Observable<CommentResponse> {
+    return this.api.updateComment(commentId, { content }).pipe(
+      tap((updated) => {
+        this.comments.update((list) => list.map((c) => (c.id === updated.id ? updated : c)));
+      })
+    );
+  }
+
+  deleteComment(commentId: string): Observable<void> {
+    return this.api.deleteComment(commentId).pipe(
+      tap(() => {
+        this.comments.update((list) => list.filter((c) => c.id !== commentId));
       })
     );
   }

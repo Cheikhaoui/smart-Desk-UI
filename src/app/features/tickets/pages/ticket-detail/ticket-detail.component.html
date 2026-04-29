@@ -36,9 +36,7 @@
       <div class="flex items-start justify-between gap-4">
         <div class="space-y-2">
           <div class="flex flex-wrap items-center gap-2">
-            @if (t.status) {
-              <app-ticket-status-badge [status]="t.status" />
-            }
+            <app-status-control [ticket]="t" />
             @if (t.priority) {
               <app-ticket-priority-badge [priority]="t.priority" />
             }
@@ -49,7 +47,19 @@
             {{ t.createdAt | date: 'medium' }}
           </p>
         </div>
-        <p-button label="Edit" icon="pi pi-pencil" (onClick)="openEdit()" />
+        <div class="flex flex-wrap gap-2">
+          <p-button label="Edit" icon="pi pi-pencil" (onClick)="openEdit()" />
+          @if (canDelete()) {
+            <p-button
+              label="Delete"
+              icon="pi pi-trash"
+              severity="danger"
+              [text]="true"
+              [loading]="deleting()"
+              (onClick)="onDelete()"
+            />
+          }
+        </div>
       </div>
 
       <div

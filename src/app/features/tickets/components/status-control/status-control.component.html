@@ -1,0 +1,13 @@
+@if (canChange()) {
+  <p-select
+    [options]="statusOptions"
+    [ngModel]="status()"
+    optionLabel="label"
+    optionValue="value"
+    [loading]="updating()"
+    (onChange)="onChange($event.value)"
+    styleClass="min-w-40"
+  />
+} @else if (status()) {
+  <app-ticket-status-badge [status]="status()!" />
+}

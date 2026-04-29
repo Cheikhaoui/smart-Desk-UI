@@ -8,8 +8,11 @@ import {
   assign,
   CommentCreateRequest,
   CommentResponse,
+  CommentUpdateRequest,
   create,
   CreateRequest,
+  delete$,
+  delete1,
   getById,
   list1,
   mine,
@@ -20,6 +23,7 @@ import {
   TicketResponse,
   unassign,
   update,
+  update1,
   UpdateRequest
 } from '../../api';
 
@@ -48,6 +52,10 @@ export class TicketApi {
     return update(this.http, this.config.rootUrl, { id, body }).pipe(map((r) => r.body));
   }
 
+  remove(id: string): Observable<void> {
+    return delete$(this.http, this.config.rootUrl, { id }).pipe(map((r) => r.body));
+  }
+
   assign(id: string, agentId: string): Observable<TicketResponse> {
     return assign(this.http, this.config.rootUrl, { id, body: { agentId } }).pipe(
       map((r) => r.body)
@@ -64,5 +72,13 @@ export class TicketApi {
 
   addComment(ticketId: string, body: CommentCreateRequest): Observable<CommentResponse> {
     return add(this.http, this.config.rootUrl, { ticketId, body }).pipe(map((r) => r.body));
+  }
+
+  updateComment(commentId: string, body: CommentUpdateRequest): Observable<CommentResponse> {
+    return update1(this.http, this.config.rootUrl, { commentId, body }).pipe(map((r) => r.body));
+  }
+
+  deleteComment(commentId: string): Observable<void> {
+    return delete1(this.http, this.config.rootUrl, { commentId }).pipe(map((r) => r.body));
   }
 }

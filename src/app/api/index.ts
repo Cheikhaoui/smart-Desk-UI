@@ -54,3 +54,7 @@ export type { Login$Params as Login$Params } from './fn/auth-controller/login';
 export { login as login } from './fn/auth-controller/login';
 export type { List$Params as List$Params } from './fn/user-controller/list';
 export { list as list } from './fn/user-controller/list';
+export type { GenerateAiSummary$Params as GenerateAiSummary$Params } from './fn/ticket-controller/ai-summary';
+export { generateAiSummary as generateAiSummary } from './fn/ticket-controller/ai-summary';
+export type { SuggestReply$Params as SuggestReply$Params, SuggestReplyResponse as SuggestReplyResponse } from './fn/ticket-controller/suggest-reply';
+export { suggestReply as suggestReply } from './fn/ticket-controller/suggest-reply';

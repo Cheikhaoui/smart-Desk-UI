@@ -129,7 +129,17 @@
       @if (fieldErrors()['content']; as msg) {
         <small class="text-red-500">{{ msg }}</small>
       }
-      <div class="flex justify-end">
+      <div class="flex items-center justify-between">
+        <p-button
+          type="button"
+          label="Suggest Reply"
+          icon="pi pi-sparkles"
+          severity="info"
+          [text]="true"
+          size="small"
+          [loading]="suggestingReply()"
+          (onClick)="suggestReply()"
+        />
         <p-button
           type="submit"
           label="Post Comment"

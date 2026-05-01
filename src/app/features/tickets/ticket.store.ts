@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, forkJoin, Observable, tap, throwError } from 'rxjs';
+import { catchError, forkJoin, map, Observable, tap, throwError } from 'rxjs';
 
 import {
   CommentResponse,
@@ -69,6 +69,9 @@ export class TicketStore {
   readonly agentsLoading = signal(false);
   readonly assigning = signal(false);
   readonly deleting = signal(false);
+
+  readonly generatingAiSummary = signal(false);
+  readonly suggestingReply = signal(false);
 
   readonly dashboardEmpty = computed(
     () => !this.dashboardLoading() && !this.error() && this.recentTickets().length === 0
@@ -371,6 +374,33 @@ export class TicketStore {
 
   clearFieldErrors(): void {
     this.fieldErrors.set({});
+  }
+
+  generateAiSummary(ticketId: string): Observable<void> {
+    this.generatingAiSummary.set(true);
+    return this.api.generateAiSummary(ticketId).pipe(
+      tap((ticket) => {
+        this.currentTicket.set(ticket);
+        this.generatingAiSummary.set(false);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        this.generatingAiSummary.set(false);
+        return throwError(() => err);
+      }),
+      map(() => undefined)
+    );
+  }
+
+  suggestReply(ticketId: string): Observable<string> {
+    this.suggestingReply.set(true);
+    return this.api.suggestReply(ticketId).pipe(
+      tap(() => this.suggestingReply.set(false)),
+      catchError((err: HttpErrorResponse) => {
+        this.suggestingReply.set(false);
+        return throwError(() => err);
+      }),
+      map((res: { suggestion: string }) => res.suggestion)
+    );
   }
 
   private parseError(err: HttpErrorResponse): {

@@ -57,6 +57,7 @@ export class TicketDetailComponent {
   readonly canDelete = computed(() => this.auth.isAdmin());
 
   readonly editDialogVisible = signal(false);
+  readonly generatingAiSummary = this.store.generatingAiSummary;
 
   constructor() {
     effect((onCleanup) => {
@@ -86,6 +87,17 @@ export class TicketDetailComponent {
 
   onSaved(): void {
     // store.currentTicket already updated by updateTicket's tap
+  }
+
+  generateSummary(): void {
+    this.store.generateAiSummary(this.id()).subscribe({
+      error: (err: HttpErrorResponse) =>
+        this.messages.add({
+          severity: 'error',
+          summary: 'AI summary failed',
+          detail: err.message
+        })
+    });
   }
 
   onDelete(): void {

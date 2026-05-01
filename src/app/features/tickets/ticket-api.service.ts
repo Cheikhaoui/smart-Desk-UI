@@ -13,6 +13,7 @@ import {
   CreateRequest,
   delete$,
   delete1,
+  generateAiSummary,
   getById,
   list1,
   mine,
@@ -20,6 +21,8 @@ import {
   PageTicketSummary,
   search,
   Search$Params,
+  suggestReply,
+  SuggestReplyResponse,
   TicketResponse,
   unassign,
   update,
@@ -80,5 +83,13 @@ export class TicketApi {
 
   deleteComment(commentId: string): Observable<void> {
     return delete1(this.http, this.config.rootUrl, { commentId }).pipe(map((r) => r.body));
+  }
+
+  generateAiSummary(id: string): Observable<TicketResponse> {
+    return generateAiSummary(this.http, this.config.rootUrl, { id }).pipe(map((r) => r.body));
+  }
+
+  suggestReply(ticketId: string): Observable<SuggestReplyResponse> {
+    return suggestReply(this.http, this.config.rootUrl, { ticketId }).pipe(map((r) => r.body));
   }
 }

@@ -38,6 +38,7 @@ export class TicketCommentsComponent {
   readonly editingId = signal<string | null>(null);
   readonly editValue = signal<string>('');
   readonly savingEdit = signal(false);
+  readonly suggestingReply = this.store.suggestingReply;
 
   readonly form = this.fb.nonNullable.group({
     content: ['', [Validators.required]]
@@ -114,6 +115,14 @@ export class TicketCommentsComponent {
             this.messages.add({ severity: 'error', summary: 'Delete failed', detail: err.message })
         });
       }
+    });
+  }
+
+  suggestReply(): void {
+    this.store.suggestReply(this.ticketId()).subscribe({
+      next: (suggestion) => this.form.controls.content.setValue(suggestion),
+      error: (err: HttpErrorResponse) =>
+        this.messages.add({ severity: 'error', summary: 'Suggestion failed', detail: err.message })
     });
   }
 

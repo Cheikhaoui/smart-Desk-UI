@@ -80,17 +80,32 @@
         </div>
       </div>
 
-      @if (t.aiSummary) {
-        <div
-          class="rounded-md border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/50 dark:bg-blue-950/20"
-        >
-          <div class="mb-2 flex items-center gap-2">
+      <div
+        class="rounded-md border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/50 dark:bg-blue-950/20"
+      >
+        <div class="mb-2 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
             <i class="pi pi-sparkles text-blue-500"></i>
             <h2 class="text-sm font-semibold text-blue-900 dark:text-blue-100">AI Summary</h2>
           </div>
-          <p class="text-sm text-blue-900 dark:text-blue-100">{{ t.aiSummary }}</p>
+          <p-button
+            [icon]="t.aiSummary ? 'pi pi-refresh' : 'pi pi-sparkles'"
+            [label]="t.aiSummary ? 'Regenerate' : 'Generate'"
+            severity="info"
+            [text]="true"
+            size="small"
+            [loading]="generatingAiSummary()"
+            (onClick)="generateSummary()"
+          />
         </div>
-      }
+        @if (t.aiSummary) {
+          <p class="text-sm text-blue-900 dark:text-blue-100">{{ t.aiSummary }}</p>
+        } @else {
+          <p class="text-sm italic text-blue-700 dark:text-blue-300">
+            No summary yet. Click Generate to create one with AI.
+          </p>
+        }
+      </div>
 
       <div
         class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded-md border p-4"

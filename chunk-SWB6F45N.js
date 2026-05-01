@@ -1,0 +1,1 @@
+import"./chunk-EQDQRRRY.js";var o=[{path:"",loadComponent:()=>import("./chunk-W2NIABYC.js").then(t=>t.TicketListComponent),title:"Tickets"},{path:":id",loadComponent:()=>import("./chunk-KM5ZE7UF.js").then(t=>t.TicketDetailComponent),title:"Ticket"}],e=o;export{e as default};

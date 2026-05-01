@@ -2,10 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>SmartdeskFrontend</title>
+    <title>SmartDesk</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <script>
+      // Restore path encoded by 404.html for GitHub Pages SPA routing.
+      (function () {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <app-root></app-root>

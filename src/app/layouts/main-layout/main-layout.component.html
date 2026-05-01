@@ -33,6 +33,24 @@
           ariaLabel="Toggle theme"
         />
 
+        <div class="relative">
+          <p-button
+            icon="pi pi-bell"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="Notifications"
+            (onClick)="openNotifications($event)"
+          />
+          @if (notificationStore.unreadCount() > 0) {
+            <span
+              class="bg-primary text-primary-contrast absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
+            >
+              {{ notificationStore.unreadCount() > 9 ? '9+' : notificationStore.unreadCount() }}
+            </span>
+          }
+        </div>
+
         @if (user(); as u) {
           <button
             type="button"
@@ -61,3 +79,51 @@
     <router-outlet />
   </main>
 </div>
+
+<p-popover #notifPanel styleClass="w-96">
+  <div class="flex items-center justify-between px-1 pb-3">
+    <h3 class="font-semibold">Notifications</h3>
+    @if (notificationStore.notifications().length > 0) {
+      <p-button
+        label="Clear all"
+        severity="secondary"
+        [text]="true"
+        size="small"
+        (onClick)="notificationStore.clear()"
+      />
+    }
+  </div>
+
+  @if (notificationStore.notifications().length === 0) {
+    <div class="text-surface-500 dark:text-surface-400 py-8 text-center">
+      <i class="pi pi-bell mb-2 block text-3xl opacity-40"></i>
+      <p class="text-sm">No notifications yet</p>
+    </div>
+  } @else {
+    <ul class="divide-surface-200 dark:divide-surface-700 -mx-3 max-h-80 divide-y overflow-y-auto">
+      @for (n of notificationStore.notifications(); track n.id) {
+        <li
+          role="button"
+          tabindex="0"
+          class="hover:bg-surface-50 dark:hover:bg-surface-800 flex cursor-pointer gap-3 px-3 py-3 transition-colors"
+          [class.opacity-60]="n.read"
+          (click)="navigateToTicket(n.ticketId)"
+          (keydown.enter)="navigateToTicket(n.ticketId)"
+        >
+          <div
+            class="bg-primary/10 text-primary mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+          >
+            <i [class]="notificationIcon(n.type) + ' text-sm'"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-medium">{{ n.ticketTitle }}</p>
+            <p class="text-surface-500 dark:text-surface-400 text-xs">{{ n.message }}</p>
+          </div>
+          @if (!n.read) {
+            <span class="bg-primary mt-2 h-2 w-2 shrink-0 rounded-full"></span>
+          }
+        </li>
+      }
+    </ul>
+  }
+</p-popover>
